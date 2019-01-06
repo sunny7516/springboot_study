@@ -3,6 +3,8 @@ package com.example.demo2;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/post")
 public class PostController {
 
+	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
+	
 	// db 조회
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -32,7 +36,6 @@ public class PostController {
 		String selectSql = "SELECT id, title, content, created_by, created_at, last_modified_at FROM POST WHERE id=?";
 		return jdbcTemplate.queryForMap(selectSql, id);
 	}
-	
 
 	/*
 	 * [POST] /post
@@ -42,8 +45,13 @@ public class PostController {
 		String insertSql = "INSERT INTO post(title, content, created_by, created_at, last_modified_at) VALUES (?, ?, ?, ?, ?)";
 		return jdbcTemplate.update(insertSql, body.get("title"), body.get("content"), body.get("created_by"), LocalDateTime.now(), LocalDateTime.now());
 	}
-	
 
+	// 2. INSERT
+	@GetMapping("/")
+	public long insert(){
+	    jdbcTemplate.update("INSERT INTO POST (TITLE, CONTENT, CREATED_BY, CREATED_AT, LAST_MODIFIED_AT) VALUES (?,?,?,?,?)", "title", "contents", "Hong son a", LocalDateTime.now(), LocalDateTime.now());
+	    return jdbcTemplate.queryForObject("select count(*) from POST", Long.class);
+	}
 	/*
 	 * [DELETE] /post
 	 */
@@ -52,7 +60,6 @@ public class PostController {
 		String deleteSql = "DELETE FROM POST WHERE ID = ?";
 		jdbcTemplate.update(deleteSql, id);
 	}
-	
 
 	/*
 	 * [PUT] /post
@@ -74,45 +81,9 @@ public class PostController {
 	
 	
 
-/*
-    // CRUD
-	    
-	// 1. create
-    @GetMapping("/")
-    public void create(){
-        jdbcTemplate.execute("CREATE DATABASE POST");
-    }
-	// 2. read
-    @GetMapping("/")
-    public List<Map<String, Object>> read(){
-        jdbcTemplate.execute("SHOW DATABASES");
-        return jdbcTemplate.queryForList("SHOW DATABASE", 0);
-    }
-	// 3. update
-    @GetMapping("/")
-    public void update(){
-        jdbcTemplate.execute("USE POST");
-    }
-    // 4. delete
-    @GetMapping("/")
-    public void delete(){
-        jdbcTemplate.execute("DROP DATABASE POST");
-    }
-    
+/*  
     // DATA
 
-    // 1. SELECT
-	@GetMapping("/")
-	public String select(){
-	    jdbcTemplate.update("SELECT * FROM POST");
-	    return jdbcTemplate.queryForObject("select * from post", String.class);
-	}
-	// 2. INSERT
-	@GetMapping("/")
-	public long insert(){
-	    jdbcTemplate.update("INSERT INTO POST (TITLE, CONTENT, CREATED_BY, CREATED_AT, LAST_MODIFIED_AT) VALUES (?,?,?,?,?)", "title", "contents", "Hong son a", LocalDateTime.now(), LocalDateTime.now());
-	    return jdbcTemplate.queryForObject("select count(*) from POST", Long.class);
-	}
     // 3. UPDATE
 	@PostMapping("/")
 	public long updateData(){
