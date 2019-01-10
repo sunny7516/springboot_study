@@ -24,7 +24,7 @@ public class PostController {
 	
 	// db 조회
 	@Autowired
-    private JdbcTemplate jdbcTemplate;
+    	private JdbcTemplate jdbcTemplate;
 	
 	
 	/*
@@ -46,12 +46,6 @@ public class PostController {
 		return jdbcTemplate.update(insertSql, body.get("title"), body.get("content"), body.get("created_by"), LocalDateTime.now(), LocalDateTime.now());
 	}
 
-	// 2. INSERT
-	@GetMapping("/")
-	public long insert(){
-	    jdbcTemplate.update("INSERT INTO POST (TITLE, CONTENT, CREATED_BY, CREATED_AT, LAST_MODIFIED_AT) VALUES (?,?,?,?,?)", "title", "contents", "Hong son a", LocalDateTime.now(), LocalDateTime.now());
-	    return jdbcTemplate.queryForObject("select count(*) from POST", Long.class);
-	}
 	/*
 	 * [DELETE] /post
 	 */
@@ -69,31 +63,3 @@ public class PostController {
 		String updateSql = "UPDATE post set title = ?, content = ?, last_modified_at = ? where ID = ?";
 		return jdbcTemplate.update(updateSql, body.get("title"), body.get("content"), LocalDateTime.now(), body.get("id"));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-/*  
-    // DATA
-
-    // 3. UPDATE
-	@PostMapping("/")
-	public long updateData(){
-		jdbcTemplate.update("UPDATE POST SET LAST_MODIFIED_AT VALUES ?", LocalDateTime.now());
-	    return jdbcTemplate.queryForObject("select count(*) from POST", Long.class);
-	}
-	// 4. DELETE
-	@DeleteMapping("/")
-	public long deleteData(){
-		jdbcTemplate.update("DELETE FROM POST");
-	    return jdbcTemplate.queryForObject("select count(*) from POST", Long.class);
-	}*/
-}
