@@ -63,3 +63,4 @@ public class PostController {
 		String updateSql = "UPDATE post set title = ?, content = ?, last_modified_at = ? where ID = ?";
 		return jdbcTemplate.update(updateSql, body.get("title"), body.get("content"), LocalDateTime.now(), body.get("id"));
 	}
+}
