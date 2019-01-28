@@ -1,0 +1,1 @@
+INSERT INTO PUSH_MESSAGE (content, status, created_by, created_at, last_modified_at) VALUES ('message', 'wait', 'heowc', current_time(), null)
